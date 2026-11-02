@@ -72,6 +72,10 @@ export interface AppSettings {
   // School hours
   schoolStartTime: string;
   schoolEndTime: string;
+  // Voice settings
+  voiceEnabled: boolean;
+  voiceSpeed: number;
+  voicePitch: number;
 }
 
 export type PageType = 'dashboard' | 'scan' | 'students' | 'teachers' | 'monthly' | 'yearly' | 'teacher-monthly' | 'data' | 'whatsapp' | 'settings' | 'guide' | 'card-printer';

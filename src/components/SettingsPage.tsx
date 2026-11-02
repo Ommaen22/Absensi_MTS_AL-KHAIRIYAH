@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { getSettings, saveSettings } from '../store';
 import { AppSettings } from '../types';
-import { Settings, Save, School, Volume2, Clock } from 'lucide-react';
+import { Settings, Save, School, Volume2, Clock, Mic } from 'lucide-react';
+import { testVoice, isVoiceSupported } from '../voice';
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings>(getSettings());
@@ -94,6 +95,83 @@ export default function SettingsPage() {
               <div className={`w-5 h-5 bg-white rounded-full transition-all mx-1 ${settings.autoDate ? 'translate-x-7' : 'translate-x-0'}`} />
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Voice Settings */}
+      <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6">
+        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+          <Mic size={20} className="text-purple-400" /> Pengaturan Suara Absensi
+        </h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-white">Sebutkan Nama Saat Absen</p>
+              <p className="text-sm text-gray-400">Suara akan menyebutkan nama siswa/guru saat scan</p>
+            </div>
+            <button onClick={() => setSettings({ ...settings, voiceEnabled: !settings.voiceEnabled })}
+              className={`w-14 h-7 rounded-full transition-all ${settings.voiceEnabled ? 'bg-purple-500' : 'bg-gray-700'}`}>
+              <div className={`w-5 h-5 bg-white rounded-full transition-all mx-1 ${settings.voiceEnabled ? 'translate-x-7' : 'translate-x-0'}`} />
+            </button>
+          </div>
+
+          {settings.voiceEnabled && (
+            <>
+              <div>
+                <label className="text-sm text-gray-400 mb-2 block">
+                  Kecepatan Suara: {settings.voiceSpeed.toFixed(1)}x
+                </label>
+                <input 
+                  type="range" 
+                  min="0.5" 
+                  max="2" 
+                  step="0.1" 
+                  value={settings.voiceSpeed}
+                  onChange={(e) => setSettings({ ...settings, voiceSpeed: parseFloat(e.target.value) })}
+                  className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>Lambat</span>
+                  <span>Normal</span>
+                  <span>Cepat</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-400 mb-2 block">
+                  Nada Suara: {settings.voicePitch.toFixed(1)}
+                </label>
+                <input 
+                  type="range" 
+                  min="0.5" 
+                  max="2" 
+                  step="0.1" 
+                  value={settings.voicePitch}
+                  onChange={(e) => setSettings({ ...settings, voicePitch: parseFloat(e.target.value) })}
+                  className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>Rendah</span>
+                  <span>Normal</span>
+                  <span>Tinggi</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => testVoice(settings)}
+                className="w-full bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 text-purple-400 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
+              >
+                <Mic size={18} />
+                Test Suara
+              </button>
+
+              {!isVoiceSupported() && (
+                <div className="bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl p-3 text-sm">
+                  ⚠️ Browser Anda tidak mendukung Web Speech API. Gunakan Chrome, Edge, atau Safari.
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
 

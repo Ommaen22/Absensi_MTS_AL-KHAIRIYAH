@@ -22,6 +22,9 @@ const defaultSettings: AppSettings = {
   whatsappCustomMessage: '',
   schoolStartTime: '07:00',
   schoolEndTime: '14:00',
+  voiceEnabled: true,
+  voiceSpeed: 1.0,
+  voicePitch: 1.0,
 };
 
 // Students

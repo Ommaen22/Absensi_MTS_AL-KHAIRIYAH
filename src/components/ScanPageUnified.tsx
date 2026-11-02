@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { findStudentByNis, findTeacherByNip, addAttendance, addTeacherAttendance, getAttendance, getTeacherAttendance, getTodayString, formatTime, generateId, getSettings } from '../store';
 import { Student, Teacher, AttendanceRecord, TeacherAttendanceRecord } from '../types';
 import { sendWhatsAppNotification, generateArrivalMessage, generateDepartureMessage } from '../whatsapp';
+import { speakName } from '../voice';
 import { ScanBarcode, CheckCircle, XCircle, AlertCircle, Clock, User, Hash, LogIn, LogOut, MessageCircle, Users, GraduationCap } from 'lucide-react';
 
 type ScannedPerson = 
@@ -109,6 +110,9 @@ export default function ScanPageUnified() {
       refreshTodayRecords();
       playSound('success');
 
+      // Speak name
+      speakName(student.name, absenType, settings);
+
       // Send WhatsApp notification
       sendNotif(student, absenType);
       return;
@@ -151,6 +155,9 @@ export default function ScanPageUnified() {
       });
       refreshTodayRecords();
       playSound('success');
+
+      // Speak name
+      speakName(teacher.name, absenType, settings);
       return;
     }
 
