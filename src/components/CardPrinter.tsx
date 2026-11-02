@@ -139,7 +139,7 @@ export default function CardPrinter() {
           
           <div class="card-footer">
             <span>${codeLabel}: ${code}</span>
-            <span>Tahun Ajaran 2024/2025</span>
+            <span>Tahun Ajaran ${settings.academicYear}</span>
           </div>
         </div>
         
@@ -513,7 +513,7 @@ export default function CardPrinter() {
           {/* Footer */}
           <div className="flex justify-between items-center mt-auto pt-2 border-t border-white/25 text-[8px] opacity-85 font-medium">
             <span>{codeLabel}: {code}</span>
-            <span>Tahun Ajaran 2024/2025</span>
+            <span>Tahun Ajaran {settings.academicYear}</span>
           </div>
         </div>
 

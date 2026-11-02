@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { getSettings, saveSettings } from '../store';
 import { AppSettings } from '../types';
-import { Settings, Save, School, Volume2, Clock, Mic } from 'lucide-react';
+import { Settings, Save, School, Volume2, Clock, Mic, Calendar } from 'lucide-react';
 import { testVoice, isVoiceSupported } from '../voice';
 
 export default function SettingsPage() {
@@ -65,6 +65,16 @@ export default function SettingsPage() {
                 onChange={(e) => setSettings({ ...settings, schoolEndTime: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-emerald-500 focus:outline-none" />
             </div>
+          </div>
+          <div>
+            <label className="text-sm text-gray-400 mb-1 block flex items-center gap-2">
+              <Calendar size={14} /> Tahun Ajaran
+            </label>
+            <input type="text" value={settings.academicYear}
+              onChange={(e) => setSettings({ ...settings, academicYear: e.target.value })}
+              placeholder="Contoh: 2025/2026"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-emerald-500 focus:outline-none" />
+            <p className="text-xs text-gray-500 mt-1">Format: YYYY/YYYY (contoh: 2025/2026). Tahun ajaran akan muncul di kartu absensi.</p>
           </div>
         </div>
       </div>

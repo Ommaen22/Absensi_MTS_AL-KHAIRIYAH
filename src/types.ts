@@ -72,6 +72,8 @@ export interface AppSettings {
   // School hours
   schoolStartTime: string;
   schoolEndTime: string;
+  // Academic year
+  academicYear: string;
   // Voice settings
   voiceEnabled: boolean;
   voiceSpeed: number;
