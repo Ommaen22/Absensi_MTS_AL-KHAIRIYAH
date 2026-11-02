@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import { getStudents, getTeachers, getSettings } from '../store';
 import { Student, Teacher } from '../types';
-import { Printer, CreditCard, Users, GraduationCap, Search, CheckSquare, Square, Download } from 'lucide-react';
-import Barcode from 'react-barcode';
+import { Printer, CreditCard, Users, GraduationCap, Search, CheckSquare, Square, Download, QrCode } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 type PrintType = 'student' | 'teacher';
 
@@ -56,7 +56,7 @@ export default function CardPrinter() {
     const printContent = printRef.current;
     if (!printContent) return;
 
-    const printWindow = window.open('', '', 'width=800,height=600');
+    const printWindow = window.open('', '', 'width=900,height=700');
     if (!printWindow) return;
 
     printWindow.document.write(`
@@ -66,94 +66,172 @@ export default function CardPrinter() {
           <title>Cetak Kartu Absensi - ${settings.schoolName}</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: Arial, sans-serif; padding: 20px; }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              padding: 20px;
+              background: #f8fafc;
+            }
             .card { 
-              width: 340px; 
-              height: 215px; 
-              border: 2px solid #10b981; 
-              border-radius: 12px; 
-              padding: 15px; 
-              margin: 10px; 
+              width: 380px; 
+              height: 240px; 
+              border-radius: 20px; 
+              margin: 15px; 
               display: inline-block;
               page-break-inside: avoid;
-              background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+              position: relative;
+              overflow: hidden;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            }
+            .card::before {
+              content: '';
+              position: absolute;
+              top: -50%;
+              right: -50%;
+              width: 200%;
+              height: 200%;
+              background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+              animation: shimmer 3s infinite;
+            }
+            @keyframes shimmer {
+              0%, 100% { transform: translate(0, 0); }
+              50% { transform: translate(-10%, -10%); }
+            }
+            .card-content {
+              position: relative;
+              z-index: 1;
+              padding: 20px;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              color: white;
             }
             .card-header {
-              text-align: center;
-              border-bottom: 2px solid #10b981;
-              padding-bottom: 8px;
-              margin-bottom: 10px;
-            }
-            .school-name {
-              font-size: 11px;
-              font-weight: bold;
-              color: #065f46;
-              margin-bottom: 2px;
-            }
-            .card-title {
-              font-size: 10px;
-              color: #047857;
-              font-weight: 600;
-            }
-            .card-body {
               display: flex;
-              gap: 12px;
               align-items: center;
+              gap: 12px;
+              margin-bottom: 15px;
             }
-            .photo-box {
-              width: 70px;
-              height: 85px;
-              border: 2px solid #10b981;
-              border-radius: 8px;
+            .school-icon {
+              width: 45px;
+              height: 45px;
+              background: rgba(255,255,255,0.2);
+              border-radius: 12px;
               display: flex;
               align-items: center;
               justify-content: center;
-              background: #f0fdf4;
-              flex-shrink: 0;
+              font-size: 24px;
+              backdrop-filter: blur(10px);
+              border: 2px solid rgba(255,255,255,0.3);
             }
-            .photo-placeholder {
-              font-size: 32px;
+            .school-info {
+              flex: 1;
+            }
+            .school-name {
+              font-size: 13px;
+              font-weight: 700;
+              letter-spacing: 0.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+              line-height: 1.2;
+            }
+            .card-type {
+              font-size: 10px;
+              opacity: 0.9;
+              font-weight: 500;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              margin-top: 2px;
+            }
+            .card-body {
+              flex: 1;
+              display: flex;
+              gap: 15px;
+              align-items: center;
             }
             .info-section {
               flex: 1;
             }
             .name {
-              font-size: 13px;
-              font-weight: bold;
-              color: #065f46;
-              margin-bottom: 6px;
+              font-size: 18px;
+              font-weight: 700;
+              margin-bottom: 10px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.2);
               line-height: 1.2;
             }
+            .detail-grid {
+              display: grid;
+              gap: 6px;
+            }
             .detail-row {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              font-size: 11px;
+            }
+            .detail-icon {
+              width: 20px;
+              height: 20px;
+              background: rgba(255,255,255,0.2);
+              border-radius: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
               font-size: 10px;
-              margin-bottom: 3px;
-              color: #047857;
+              flex-shrink: 0;
             }
-            .detail-label {
-              font-weight: 600;
-              display: inline-block;
-              width: 50px;
+            .detail-text {
+              font-weight: 500;
+              opacity: 0.95;
             }
-            .barcode-section {
-              text-align: center;
-              margin-top: 8px;
-              padding-top: 8px;
-              border-top: 1px dashed #10b981;
+            .qr-section {
+              background: white;
+              border-radius: 12px;
+              padding: 10px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 4px;
             }
-            .barcode-section svg {
-              max-width: 100%;
-              height: 45px;
+            .qr-section svg {
+              width: 80px;
+              height: 80px;
             }
-            .barcode-text {
+            .qr-code-text {
               font-size: 9px;
-              font-family: monospace;
-              color: #065f46;
-              margin-top: 2px;
-              font-weight: 600;
+              font-weight: 700;
+              color: #667eea;
+              font-family: 'Courier New', monospace;
+              letter-spacing: 0.5px;
+            }
+            .card-footer {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-top: auto;
+              padding-top: 10px;
+              border-top: 1px solid rgba(255,255,255,0.2);
+              font-size: 9px;
+              opacity: 0.8;
+            }
+            .decoration-dots {
+              position: absolute;
+              bottom: 10px;
+              right: 10px;
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 3px;
+              opacity: 0.3;
+            }
+            .dot {
+              width: 4px;
+              height: 4px;
+              background: white;
+              border-radius: 50%;
             }
             @media print {
-              body { padding: 0; }
-              .card { margin: 5px; }
+              body { padding: 0; background: white; }
+              .card { margin: 10px; }
             }
           </style>
         </head>
@@ -181,59 +259,92 @@ export default function CardPrinter() {
     return (
       <div 
         key={item.id}
-        className={`bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-500 rounded-xl p-4 ${
-          showPreview ? 'w-[340px] h-[215px]' : 'w-full'
-        }`}
+        className={`bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-[20px] ${
+          showPreview ? 'w-[380px] h-[240px]' : 'w-full'
+        } relative overflow-hidden shadow-2xl`}
+        style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.15)' }}
       >
-        {/* Header */}
-        <div className="text-center border-b-2 border-emerald-500 pb-2 mb-3">
-          <div className="text-xs font-bold text-emerald-900">{settings.schoolName}</div>
-          <div className="text-[10px] text-emerald-700 font-semibold">KARTU ABSENSI {isStudent ? 'SISWA' : 'GURU'}</div>
+        {/* Decorative Background */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-32 translate-x-32"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full translate-y-24 -translate-x-24"></div>
         </div>
 
-        {/* Body */}
-        <div className="flex gap-3 items-center">
-          {/* Photo Box */}
-          <div className="w-[70px] h-[85px] border-2 border-emerald-500 rounded-lg flex items-center justify-center bg-emerald-50 flex-shrink-0">
-            <div className="text-3xl">
-              {isStudent ? '👤' : '🎓'}
+        {/* Content */}
+        <div className="relative z-10 p-5 h-full flex flex-col text-white">
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl border-2 border-white/30">
+              {isStudent ? '🎓' : '👨‍🏫'}
+            </div>
+            <div className="flex-1">
+              <div className="text-xs font-bold tracking-wide leading-tight" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                {settings.schoolName}
+              </div>
+              <div className="text-[10px] opacity-90 font-medium tracking-widest uppercase mt-0.5">
+                KARTU {isStudent ? 'SISWA' : 'GURU'}
+              </div>
             </div>
           </div>
 
-          {/* Info */}
-          <div className="flex-1">
-            <div className="text-sm font-bold text-emerald-900 mb-1.5 leading-tight">{name}</div>
-            <div className="text-[10px] mb-1 text-emerald-800">
-              <span className="font-semibold inline-block w-[50px]">{codeLabel}:</span>
-              {code}
+          {/* Body */}
+          <div className="flex gap-4 items-center flex-1">
+            {/* Info Section */}
+            <div className="flex-1">
+              <div className="text-lg font-bold mb-2.5 leading-tight" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                {name}
+              </div>
+              <div className="grid gap-1.5">
+                <div className="flex items-center gap-2 text-[11px]">
+                  <div className="w-5 h-5 bg-white/20 rounded-md flex items-center justify-center text-[10px] flex-shrink-0">
+                    {isStudent ? '📚' : '📖'}
+                  </div>
+                  <span className="font-medium opacity-95">
+                    {isStudent ? 'Kelas' : 'Mapel'}: {detail1}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-[11px]">
+                  <div className="w-5 h-5 bg-white/20 rounded-md flex items-center justify-center text-[10px] flex-shrink-0">
+                    {isStudent ? '⚧' : '💼'}
+                  </div>
+                  <span className="font-medium opacity-95">
+                    {isStudent ? 'Gender' : 'Jabatan'}: {detail2}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="text-[10px] mb-1 text-emerald-800">
-              <span className="font-semibold inline-block w-[50px]">
-                {isStudent ? 'Kelas' : 'Mapel'}:
-              </span>
-              {detail1}
+
+            {/* QR Code Section */}
+            <div className="bg-white rounded-xl p-2.5 shadow-lg flex flex-col items-center gap-1">
+              <QRCodeSVG
+                value={code}
+                size={80}
+                level="M"
+                includeMargin={false}
+                bgColor="#ffffff"
+                fgColor="#667eea"
+              />
+              <div className="text-[9px] font-bold text-indigo-600 font-mono tracking-wide">
+                {code}
+              </div>
             </div>
-            <div className="text-[10px] text-emerald-800">
-              <span className="font-semibold inline-block w-[50px]">
-                {isStudent ? 'Gender' : 'Jabatan'}:
-              </span>
-              {detail2}
-            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex justify-between items-center mt-auto pt-2.5 border-t border-white/20 text-[9px] opacity-80">
+            <span>{codeLabel}: {code}</span>
+            <span>Tahun Ajaran 2024/2025</span>
           </div>
         </div>
 
-        {/* Barcode */}
-        <div className="text-center mt-2 pt-2 border-t border-dashed border-emerald-500">
-          <Barcode 
-            value={code} 
-            format="CODE128"
-            height={40}
-            width={1.5}
-            displayValue={false}
-            background="transparent"
-            lineColor="#065f46"
-          />
-          <div className="text-[9px] font-mono text-emerald-900 mt-1 font-semibold">{code}</div>
+        {/* Decoration Dots */}
+        <div className="absolute bottom-2.5 right-2.5 grid grid-cols-3 gap-1 opacity-30">
+          <div className="w-1 h-1 bg-white rounded-full"></div>
+          <div className="w-1 h-1 bg-white rounded-full"></div>
+          <div className="w-1 h-1 bg-white rounded-full"></div>
+          <div className="w-1 h-1 bg-white rounded-full"></div>
+          <div className="w-1 h-1 bg-white rounded-full"></div>
+          <div className="w-1 h-1 bg-white rounded-full"></div>
         </div>
       </div>
     );
@@ -249,7 +360,7 @@ export default function CardPrinter() {
           <CreditCard className="text-indigo-400" />
           Cetak Kartu Absensi
         </h1>
-        <p className="text-gray-400 mt-1">Cetak kartu barcode untuk siswa dan guru</p>
+        <p className="text-gray-400 mt-1">Cetak kartu QR Code untuk siswa dan guru</p>
       </div>
 
       {/* Type Selector */}
@@ -259,7 +370,7 @@ export default function CardPrinter() {
             onClick={() => { setPrintType('student'); setSelectedIds(new Set()); }}
             className={`flex-1 px-4 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
               printType === 'student' 
-                ? 'bg-emerald-500 text-white' 
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg' 
                 : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
@@ -270,7 +381,7 @@ export default function CardPrinter() {
             onClick={() => { setPrintType('teacher'); setSelectedIds(new Set()); }}
             className={`flex-1 px-4 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
               printType === 'teacher' 
-                ? 'bg-purple-500 text-white' 
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg' 
                 : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
@@ -303,7 +414,7 @@ export default function CardPrinter() {
           <button
             onClick={handlePrint}
             disabled={selectedIds.size === 0}
-            className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all"
+            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-lg"
           >
             <Printer size={18} />
             Cetak ({selectedIds.size})
@@ -394,7 +505,7 @@ export default function CardPrinter() {
                   setPreviewItem(null);
                   setTimeout(handlePrint, 100);
                 }}
-                className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
+                className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-lg"
               >
                 <Printer size={18} />
                 Cetak Kartu Ini
@@ -418,14 +529,17 @@ export default function CardPrinter() {
       </div>
 
       {/* Info */}
-      <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
-        <h3 className="text-blue-400 font-semibold mb-2">💡 Tips Cetak Kartu</h3>
+      <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl p-4">
+        <h3 className="text-blue-400 font-semibold mb-2 flex items-center gap-2">
+          <QrCode size={18} />
+          💡 Tips Cetak Kartu
+        </h3>
         <ul className="text-sm text-gray-300 space-y-1">
-          <li>• Gunakan kertas tebal (200-300 gsm) untuk hasil terbaik</li>
-          <li>• Ukuran kartu: 8.5cm x 5.4cm (ukuran kartu kredit)</li>
-          <li>• Pastikan printer设置为 "Actual Size" atau "100%"</li>
-          <li>• Setelah dicetak, bisa dilaminating agar lebih awet</li>
-          <li>• Barcode dapat di-scan dengan scanner CASHCOW HC-P10</li>
+          <li>• Gunakan kertas tebal (250-300 gsm) untuk hasil terbaik</li>
+          <li>• Ukuran kartu: 9.5cm x 6cm (ukuran kartu kredit)</li>
+          <li>• QR Code dapat di-scan dengan scanner CASHCOW HC-P10 atau HP</li>
+          <li>• Setelah dicetak, laminating agar lebih awet</li>
+          <li>• Design modern dengan gradient dan QR Code 2D</li>
         </ul>
       </div>
     </div>
