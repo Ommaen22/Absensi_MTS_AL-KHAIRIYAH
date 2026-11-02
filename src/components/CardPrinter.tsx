@@ -35,7 +35,7 @@ export default function CardPrinter() {
         if (!qrDataUrls.has(code)) {
           try {
             const dataUrl = await QRCode.toDataURL(code, {
-              width: 200,
+              width: 280,
               margin: 1,
               color: {
                 dark: '#4f46e5',
@@ -191,8 +191,8 @@ export default function CardPrinter() {
     }
     
     .card {
-      width: 340px;
-      height: 215px;
+      width: 380px;
+      height: 240px;
       border-radius: 16px;
       margin: 8px;
       display: inline-block;
@@ -237,14 +237,14 @@ export default function CardPrinter() {
     }
     
     .school-icon {
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       background: rgba(255,255,255,0.2);
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 24px;
       backdrop-filter: blur(10px);
       border: 2px solid rgba(255,255,255,0.3);
       flex-shrink: 0;
@@ -256,7 +256,7 @@ export default function CardPrinter() {
     }
     
     .school-name {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.3px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.3);
@@ -267,7 +267,7 @@ export default function CardPrinter() {
     }
     
     .card-type {
-      font-size: 9px;
+      font-size: 11px;
       opacity: 0.9;
       font-weight: 600;
       letter-spacing: 1.5px;
@@ -288,9 +288,9 @@ export default function CardPrinter() {
     }
     
     .name {
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.3);
       line-height: 1.2;
       word-wrap: break-word;
@@ -298,25 +298,25 @@ export default function CardPrinter() {
     
     .detail-grid {
       display: grid;
-      gap: 5px;
+      gap: 6px;
     }
     
     .detail-row {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 10px;
+      gap: 8px;
+      font-size: 12px;
     }
     
     .detail-icon {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       background: rgba(255,255,255,0.2);
-      border-radius: 5px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 9px;
+      font-size: 11px;
       flex-shrink: 0;
     }
     
@@ -330,24 +330,24 @@ export default function CardPrinter() {
     
     .qr-section {
       background: white;
-      border-radius: 10px;
-      padding: 8px;
+      border-radius: 12px;
+      padding: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       flex-shrink: 0;
     }
     
     .qr-image {
-      width: 70px;
-      height: 70px;
+      width: 95px;
+      height: 95px;
       display: block;
     }
     
     .qr-code-text {
-      font-size: 8px;
+      font-size: 11px;
       font-weight: 700;
       color: #4f46e5;
       font-family: 'Courier New', monospace;
@@ -359,11 +359,11 @@ export default function CardPrinter() {
       justify-content: space-between;
       align-items: center;
       margin-top: auto;
-      padding-top: 8px;
+      padding-top: 10px;
       border-top: 1px solid rgba(255,255,255,0.25);
-      font-size: 8px;
-      opacity: 0.85;
-      font-weight: 500;
+      font-size: 10px;
+      opacity: 0.9;
+      font-weight: 600;
     }
     
     .decoration-dots {
@@ -429,7 +429,7 @@ export default function CardPrinter() {
     return (
       <div 
         key={item.id}
-        className="w-[340px] h-[215px] rounded-2xl relative overflow-hidden shadow-2xl"
+        className="w-[380px] h-[240px] rounded-2xl relative overflow-hidden shadow-2xl"
         style={{ 
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
@@ -449,15 +449,15 @@ export default function CardPrinter() {
         {/* Content */}
         <div className="relative z-10 p-4 h-full flex flex-col text-white">
           {/* Header */}
-          <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-xl border-2 border-white/30 flex-shrink-0">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl border-2 border-white/30 flex-shrink-0">
               {emoji}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[11px] font-bold tracking-wide leading-tight truncate" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+              <div className="text-[13px] font-bold tracking-wide leading-tight truncate" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                 {settings.schoolName}
               </div>
-              <div className="text-[9px] opacity-90 font-semibold tracking-widest uppercase mt-0.5">
+              <div className="text-[11px] opacity-90 font-semibold tracking-widest uppercase mt-0.5">
                 KARTU {isStudent ? 'SISWA' : 'GURU'}
               </div>
             </div>
@@ -467,20 +467,20 @@ export default function CardPrinter() {
           <div className="flex gap-3 items-center flex-1">
             {/* Info Section */}
             <div className="flex-1 min-w-0">
-              <div className="text-base font-bold mb-2 leading-tight break-words" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+              <div className="text-xl font-bold mb-2.5 leading-tight break-words" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                 {name}
               </div>
-              <div className="grid gap-1.5">
-                <div className="flex items-center gap-1.5 text-[10px]">
-                  <div className="w-[18px] h-[18px] bg-white/20 rounded-md flex items-center justify-center text-[9px] flex-shrink-0">
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-[22px] h-[22px] bg-white/20 rounded-md flex items-center justify-center text-[11px] flex-shrink-0">
                     {isStudent ? '📚' : '📖'}
                   </div>
                   <span className="font-medium opacity-95 truncate">
                     {detail1Label}: {detail1}
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px]">
-                  <div className="w-[18px] h-[18px] bg-white/20 rounded-md flex items-center justify-center text-[9px] flex-shrink-0">
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-[22px] h-[22px] bg-white/20 rounded-md flex items-center justify-center text-[11px] flex-shrink-0">
                     {isStudent ? '⚧' : '💼'}
                   </div>
                   <span className="font-medium opacity-95 truncate">
@@ -491,27 +491,27 @@ export default function CardPrinter() {
             </div>
 
             {/* QR Code Section */}
-            <div className="bg-white rounded-xl p-2 shadow-lg flex flex-col items-center gap-1 flex-shrink-0">
+            <div className="bg-white rounded-xl p-2.5 shadow-lg flex flex-col items-center gap-1.5 flex-shrink-0">
               {qrDataUrl ? (
-                <img src={qrDataUrl} alt="QR Code" className="w-[70px] h-[70px]" />
+                <img src={qrDataUrl} alt="QR Code" className="w-[95px] h-[95px]" />
               ) : (
                 <QRCodeSVG
                   value={code}
-                  size={70}
+                  size={95}
                   level="M"
                   includeMargin={false}
                   bgColor="#ffffff"
                   fgColor="#4f46e5"
                 />
               )}
-              <div className="text-[8px] font-bold text-indigo-600 font-mono tracking-wide">
+              <div className="text-[11px] font-bold text-indigo-600 font-mono tracking-wide">
                 {code}
               </div>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-auto pt-2 border-t border-white/25 text-[8px] opacity-85 font-medium">
+          <div className="flex justify-between items-center mt-auto pt-2.5 border-t border-white/25 text-[10px] opacity-90 font-semibold">
             <span>{codeLabel}: {code}</span>
             <span>Tahun Ajaran {settings.academicYear}</span>
           </div>
