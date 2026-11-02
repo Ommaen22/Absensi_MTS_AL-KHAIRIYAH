@@ -12,6 +12,7 @@ import DataManager from './components/DataManager';
 import WhatsAppPage from './components/WhatsAppPage';
 import SettingsPage from './components/SettingsPage';
 import GuidePage from './components/GuidePage';
+import CardPrinter from './components/CardPrinter';
 import { Menu, X } from 'lucide-react';
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
       case 'whatsapp': return <WhatsAppPage />;
       case 'settings': return <SettingsPage />;
       case 'guide': return <GuidePage />;
+      case 'card-printer': return <CardPrinter />;
       default: return <Dashboard onNavigate={setCurrentPage} />;
     }
   };

@@ -10,7 +10,7 @@ const STORAGE_KEYS = {
 };
 
 const defaultSettings: AppSettings = {
-  schoolName: 'SMA Negeri 1',
+  schoolName: 'MTS AL-KHOIRIYAH PELINDUNG JAYA',
   schoolAddress: 'Jl. Pendidikan No. 1',
   scanSound: true,
   autoDate: true,
