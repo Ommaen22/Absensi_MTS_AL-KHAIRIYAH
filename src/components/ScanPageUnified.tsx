@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { findStudentByNis, findTeacherByNip, addAttendance, addTeacherAttendance, getAttendance, getTeacherAttendance, getTodayString, formatTime, generateId, getSettings } from '../store';
-import { Student, Teacher, AttendanceRecord, TeacherAttendanceRecord } from '../types';
+import { findStudentByNis, findTeacherByNip, addAttendance, addTeacherAttendance, getAttendance, getTeacherAttendance, getTodayString, formatTime, generateId, getSettings, saveSettings } from '../store';
+import { Student, Teacher, AttendanceRecord, TeacherAttendanceRecord, AppSettings } from '../types';
 import { sendWhatsAppNotification, generateArrivalMessage, generateDepartureMessage } from '../whatsapp';
-import { ScanBarcode, CheckCircle, XCircle, AlertCircle, Clock, User, Hash, LogIn, LogOut, MessageCircle, Users, GraduationCap } from 'lucide-react';
+import { speakName } from '../voice';
+import { ScanBarcode, CheckCircle, XCircle, AlertCircle, Clock, User, Hash, LogIn, LogOut, MessageCircle, Users, GraduationCap, Mic, MicOff } from 'lucide-react';
 
 type ScannedPerson = 
   | { type: 'student'; data: Student; record: AttendanceRecord }
@@ -19,12 +20,18 @@ export default function ScanPageUnified() {
   const [absenType, setAbsenType] = useState<'masuk' | 'pulang'>('masuk');
   const [notifStatus, setNotifStatus] = useState<string>('');
   const [filterTab, setFilterTab] = useState<'all' | 'student' | 'teacher'>('all');
+  const [settings, setSettings] = useState<AppSettings>(getSettings());
   
   const inputRef = useRef<HTMLInputElement>(null);
   const bufferRef = useRef('');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const today = getTodayString();
-  const settings = getSettings();
+
+  const toggleVoice = () => {
+    const newSettings = { ...settings, voiceEnabled: !settings.voiceEnabled };
+    setSettings(newSettings);
+    saveSettings(newSettings);
+  };
 
   useEffect(() => {
     refreshTodayRecords();
@@ -109,6 +116,9 @@ export default function ScanPageUnified() {
       refreshTodayRecords();
       playSound('success');
 
+      // Speak name
+      speakName(student.name, absenType, settings);
+
       // Send WhatsApp notification
       sendNotif(student, absenType);
       return;
@@ -151,6 +161,9 @@ export default function ScanPageUnified() {
       });
       refreshTodayRecords();
       playSound('success');
+
+      // Speak name
+      speakName(teacher.name, absenType, settings);
       return;
     }
 
@@ -346,12 +359,30 @@ export default function ScanPageUnified() {
               <LogOut size={16} /> Pulang
             </button>
           </div>
-          {settings.whatsappEnabled && (
-            <div className="sm:ml-auto flex items-center gap-2 text-emerald-400 text-sm">
-              <MessageCircle size={16} />
-              <span>Notif WA Aktif</span>
-            </div>
-          )}
+          <div className="sm:ml-auto flex items-center gap-3">
+            {settings.whatsappEnabled && (
+              <div className="flex items-center gap-2 text-emerald-400 text-sm">
+                <MessageCircle size={16} />
+                <span className="hidden md:inline">WA Aktif</span>
+              </div>
+            )}
+            
+            {/* Voice Toggle Button */}
+            <button
+              onClick={toggleVoice}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                settings.voiceEnabled 
+                  ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30' 
+                  : 'bg-gray-800 text-gray-500 border border-gray-700 hover:bg-gray-700'
+              }`}
+              title={settings.voiceEnabled ? 'Klik untuk matikan suara' : 'Klik untuk aktifkan suara'}
+            >
+              {settings.voiceEnabled ? <Mic size={16} /> : <MicOff size={16} />}
+              <span className="hidden md:inline">
+                {settings.voiceEnabled ? 'Suara ON' : 'Suara OFF'}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 

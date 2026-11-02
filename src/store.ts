@@ -9,8 +9,21 @@ const STORAGE_KEYS = {
   notifications: 'sihadir_notifications',
 };
 
+// Helper to get current academic year
+function getCurrentAcademicYear(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  // Academic year starts in July (month 7)
+  if (month >= 7) {
+    return `${year}/${year + 1}`;
+  } else {
+    return `${year - 1}/${year}`;
+  }
+}
+
 const defaultSettings: AppSettings = {
-  schoolName: 'SMA Negeri 1',
+  schoolName: 'MTS AL-KHOIRIYAH PELINDUNG JAYA',
   schoolAddress: 'Jl. Pendidikan No. 1',
   scanSound: true,
   autoDate: true,
@@ -22,6 +35,10 @@ const defaultSettings: AppSettings = {
   whatsappCustomMessage: '',
   schoolStartTime: '07:00',
   schoolEndTime: '14:00',
+  academicYear: getCurrentAcademicYear(),
+  voiceEnabled: true,
+  voiceSpeed: 1.0,
+  voicePitch: 1.0,
 };
 
 // Students

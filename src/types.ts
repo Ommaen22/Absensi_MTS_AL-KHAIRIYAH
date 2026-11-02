@@ -72,9 +72,15 @@ export interface AppSettings {
   // School hours
   schoolStartTime: string;
   schoolEndTime: string;
+  // Academic year
+  academicYear: string;
+  // Voice settings
+  voiceEnabled: boolean;
+  voiceSpeed: number;
+  voicePitch: number;
 }
 
-export type PageType = 'dashboard' | 'scan' | 'students' | 'teachers' | 'monthly' | 'yearly' | 'teacher-monthly' | 'data' | 'whatsapp' | 'settings' | 'guide';
+export type PageType = 'dashboard' | 'scan' | 'students' | 'teachers' | 'monthly' | 'yearly' | 'teacher-monthly' | 'data' | 'whatsapp' | 'settings' | 'guide' | 'card-printer';
 
 export interface NotificationLog {
   id: string;

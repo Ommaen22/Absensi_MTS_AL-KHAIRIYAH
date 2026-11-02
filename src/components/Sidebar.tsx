@@ -12,6 +12,7 @@ import {
   UserCheck,
   BookOpen,
   ClipboardList,
+  CreditCard,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -45,6 +46,7 @@ export default function Sidebar({ currentPage, onNavigate }: SidebarProps) {
           <p className="text-xs text-gray-600 uppercase tracking-wider font-semibold">Absensi</p>
         </div>
         <NavItem page="scan" label="Scan Absensi" icon={<ScanBarcode size={18} />} current={currentPage} onClick={onNavigate} />
+        <NavItem page="card-printer" label="Cetak Kartu" icon={<CreditCard size={18} />} current={currentPage} onClick={onNavigate} color="indigo" />
         <NavItem page="students" label="Data Siswa" icon={<Users size={18} />} current={currentPage} onClick={onNavigate} />
         <NavItem page="teachers" label="Data Guru" icon={<BookOpen size={18} />} current={currentPage} onClick={onNavigate} color="purple" />
         <NavItem page="monthly" label="Rekap Bulanan Siswa" icon={<CalendarDays size={18} />} current={currentPage} onClick={onNavigate} />
@@ -83,6 +85,7 @@ function NavItem({ page, label, icon, current, onClick, color = 'emerald' }: {
     emerald: { active: 'bg-emerald-500/20 text-emerald-400', hover: 'hover:bg-gray-800 hover:text-gray-200' },
     purple: { active: 'bg-purple-500/20 text-purple-400', hover: 'hover:bg-gray-800 hover:text-gray-200' },
     green: { active: 'bg-green-500/20 text-green-400', hover: 'hover:bg-gray-800 hover:text-gray-200' },
+    indigo: { active: 'bg-indigo-500/20 text-indigo-400', hover: 'hover:bg-gray-800 hover:text-gray-200' },
   };
 
   const colors = colorClasses[color] || colorClasses.emerald;
